@@ -3,7 +3,7 @@ import streamlit as st
 from langchain.llms import openai
 from langchain.llms import OpenAI
 
-st.title('my first gen AI app2222')
+st.title('my first gen AI app_tom')
 
 st.markdown("""
 this is a sample markdown
