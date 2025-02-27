@@ -83,24 +83,27 @@ def main():
         st.session_state.qa_chain = None
 
     with st.sidebar:
-        st.subheader("your PDF")
-        pdf_docs = st.file_uploader("please upload your PDF's",
+        st.subheader("Your PDF")
+        pdf_docs = st.file_uploader("Please upload your PDF's",
                                     type="pdf",
-                                    accept_multiple_files=True
-                                    )
-
+                                    accept_multiple_files=True)
         logger.info(pdf_docs)
         if st.button("Process"):
-            with st.spinner("processing"):
-                qa_chain = upload_file(pdf_docs)
-                st.session_state.qa_chain = qa_chain
+            if pdf_docs:
+                with st.spinner("Processing"):
+                    qa_chain = upload_file(pdf_docs)
+                    st.session_state.qa_chain = qa_chain
+            else:
+                st.error("Please upload at least one PDF file.")
 
-    user_input = st.text_input("ask your question")
+    user_input = st.text_input("Ask your question")
 
     if user_input:
-        with st.spinner("thinking..."):
-            qa_chain = st.session_state.qa_chain
-            response = qa_chain.invoke(user_input)
-            st.write(response)
+        if st.session_state.qa_chain is None:
+            st.error("Please upload and process a PDF before asking a question.")
+        else:
+            with st.spinner("Thinking..."):
+                response = st.session_state.qa_chain.invoke(user_input)
+                st.write(response)
 
 main()
